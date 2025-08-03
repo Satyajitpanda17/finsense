@@ -1,4 +1,4 @@
-# 💸 Finsense - Personal Budget Tracker App
+# 💸 FinSense - Personal Budget Tracker App
 
 Finsense is a **responsive Flutter-based budget management app** that enables users to track their income and expenses with ease. Designed with modern UI principles, local data storage, and theme adaptability, the app offers advanced features like AI-based budgeting suggestions and detailed insights via charts.
 
