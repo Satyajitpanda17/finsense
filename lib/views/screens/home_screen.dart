@@ -1,7 +1,12 @@
+import 'package:finsense/common/widgets/transaction_tile.dart';
 import 'package:finsense/constants/colors.dart';
 import 'package:finsense/data/dummy_data.dart';
+import 'package:finsense/data/model/add_data.dart';
+import 'package:finsense/data/utility.dart';
 import 'package:finsense/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,10 +17,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final box = Hive.box<AddData>('data');
+  final List<String> day = [
+    'Monday',
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    'friday',
+    'saturday',
+    'sunday'
+  ];
+  
   @override
   Widget build(BuildContext context) {
      final themeProvider = Provider.of<ThemeProvider>(context);
-
+    
     bool isDarkMode = themeProvider.themeMode == ThemeMode.dark;
 
     return Scaffold(
@@ -31,65 +47,74 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-             SliverToBoxAdapter(
-                      child: SizedBox(height: 340, child: _head()),
-                    ),
-             SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Transactions History',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 19,
-                                //color: Colors.black,
-                              ),
-                            ),
-                            Text(
-                              'See all',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          ],
-                        ),
+        child: ValueListenableBuilder(
+          valueListenable: box.listenable(),
+          builder: (context, value, child){
+           return CustomScrollView(
+            slivers: [
+               SliverToBoxAdapter(
+                        child: SizedBox(height: 340, child: _head()),
                       ),
-                    ), 
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate((context,index){
-                        return ListTile(
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Image.asset("assets/images/${geter()[index].image!}"),
+               SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Transactions History',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 19,
+                                  //color: Colors.black,
+                                ),
+                              ),
+                              Text(
+                                'See all',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
                           ),
-                          title: Text(geter()[index].name!,
-                          style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w500
-                          ),),
-                          subtitle: Text(geter()[index].time!,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500
-                          ),),
-                          trailing: Text('\$ ${geter()[index].fee!}',
-                          style: TextStyle(
-                            fontSize: 19,
-                            fontWeight: FontWeight.w500,
-                            color: geter()[index].buy! ?Colors.red :Colors.green,
-                          ),),
-                        );
-                      },
-                      childCount: geter().length,
-                      )
-                      )  ,
-          ],
+                        ),
+                      ), 
+                      SliverList(
+                        delegate: SliverChildBuilderDelegate((context,index){
+                          final AddData history = box.values.toList()[index];
+                          if(history!=null){
+                            return getList(history, index);
+                          }
+                          // return ListTile(
+                          //   leading: ClipRRect(
+                          //     borderRadius: BorderRadius.circular(5),
+                          //     child: Image.asset("assets/images/${geter()[index].image!}"),
+                          //   ),
+                          //   title: Text(geter()[index].name!,
+                          //   style: TextStyle(
+                          //     fontSize: 17,
+                          //     fontWeight: FontWeight.w500
+                          //   ),),
+                          //   subtitle: Text(geter()[index].time!,
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.w500
+                          //   ),),
+                          //   trailing: Text('\$ ${geter()[index].fee!}',
+                          //   style: TextStyle(
+                          //     fontSize: 19,
+                          //     fontWeight: FontWeight.w500,
+                          //     color: geter()[index].buy! ?Colors.red :Colors.green,
+                          //   ),),
+                          // );
+                        },
+                        childCount: box.length,
+                        )
+                        )  ,
+            ],
+          );
+          }
         )
     )
     );
@@ -205,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Row(
                     children: [
                       Text(
-                        '\$ 25,000',//${total()}
+                        '\$ ${total()}',//
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 25,
@@ -275,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$ 50,350',//${income()}
+                        '\$ ${income()}',//
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
@@ -283,7 +308,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       Text(
-                        '\$ 29,350',//${expenses()}
+                        '\$ ${expenses()}',//
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
@@ -300,4 +325,22 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
+
+   Widget getList(AddData history, int index) {
+    final formattedDate ='${day[history.datetime.weekday - 1]}    ${history.datetime.year}-${history.datetime.month}-${history.datetime.day}';
+    return Dismissible(
+        key: UniqueKey(),
+        onDismissed: (direction) {
+          history.delete();
+        },
+        child: TransactionTile(
+                name:history.name,
+                time: formattedDate,
+                amount: history.amount,
+                type: history.type,
+                explain: history.explain,
+              )
+    );
+  }
+
 }

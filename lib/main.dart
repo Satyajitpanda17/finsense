@@ -1,10 +1,16 @@
 import 'package:finsense/common/widgets/bootom_bar.dart';
+import 'package:finsense/data/model/add_data.dart';
 import 'package:finsense/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:provider/provider.dart';
 import 'package:finsense/providers/theme_provider.dart';
 
-void main() {
+void main() async{
+  await Hive.initFlutter();
+  Hive.registerAdapter(AddDataAdapter());
+  await Hive.openBox<AddData>('data');
   runApp (ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       child: const MyApp(),

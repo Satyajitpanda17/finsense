@@ -3,7 +3,9 @@ import 'package:finsense/common/widgets/customdropdown_type.dart';
 import 'package:finsense/common/widgets/customdropdownname.dart';
 import 'package:finsense/common/widgets/date.dart';
 import 'package:finsense/constants/colors.dart';
+import 'package:finsense/data/model/add_data.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 class AddScreen extends StatefulWidget {
   const AddScreen({super.key});
@@ -13,6 +15,7 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+  final box = Hive.box<AddData>('data');
   final TextEditingController amount_c = TextEditingController();
   FocusNode amount_ = FocusNode();
   final TextEditingController expalin_C = TextEditingController();
@@ -133,78 +136,37 @@ class _AddScreenState extends State<AddScreen> {
                         },
                       ),        
                       SizedBox(height: 30,),
-                      Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color(0xff368983),
-        ),
-        width: 120,
-        height: 50,
-        child: Text(
-          'Save',
-          style: TextStyle(
-            fontFamily: 'f',
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-            fontSize: 17,
-          ),
-        ),
-      ),
-    //                Padding(
-    //                 padding: const EdgeInsets.symmetric(horizontal: 15),
-    //                 child: Container(
-    //                   padding: EdgeInsets.symmetric(horizontal: 15),
-    //                    width: 300,
-    //                       decoration: BoxDecoration(
-    //                        borderRadius: BorderRadius.circular(10),
-    //                          border: Border.all(
-    //                            width: 2,
-    //                             color: Color(0xffC5C5C5),
-    //                               ),
-    //                                ),
-    //                       child: DropdownButton<String>(
-    //       value: selctedItemi,
-    //       onChanged: ((value) {
-    //         setState(() {
-    //           selctedItemi = value!;
-    //         });
-    //       }),
-    //       items: _itemei
-    //           .map((e) => DropdownMenuItem(
-    //                 child: Container(
-    //                   alignment: Alignment.center,
-    //                   child: Row(
-    //                     children: [
-    //                       Text(
-    //                         e,
-    //                         style: TextStyle(fontSize: 18),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 ),
-    //                 value: e,
-    //               ))
-    //           .toList(),
-    //       selectedItemBuilder: (BuildContext context) => _itemei
-    //           .map((e) => Row(
-    //                 children: [Text(e)],
-    //               ))
-    //           .toList(),
-    //       hint: Padding(
-    //         padding: const EdgeInsets.only(top: 12),
-    //         child: Text(
-    //           'How',
-    //           style: TextStyle(color: Colors.grey),
-    //         ),
-    //       ),
-    //       dropdownColor: Colors.white,
-    //       isExpanded: true,
-    //       underline: Container(),
-    //     ),
-    //   ),
-    // ),
-                
+                      GestureDetector(
+                          onTap: () {
+                            var add = AddData(
+                                 name: selectedItem!, 
+                                 explain: expalin_C.text, 
+                                 amount: amount_c.text, 
+                                 type: selectedItemi!, 
+                                 datetime: date
+                                 );
+                            box.add(add);
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Color(0xff368983),
+                            ),
+                            width: 120,
+                            height: 50,
+                            child: Text(
+                              'Save',
+                              style: TextStyle(
+                                fontFamily: 'f',
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                                fontSize: 17,
+                              ),
+                            ),
+                          ),
+                        ),
                 ],
               ),
             )
