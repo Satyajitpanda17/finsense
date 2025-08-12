@@ -28,7 +28,7 @@ class _ChartState extends State<Chart> {
         break;
       case 1:
         a = week();
-        print(a);
+        print(a); 
         b = false;
         j = true;
         break;
