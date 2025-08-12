@@ -46,8 +46,8 @@ Finsense is a **responsive Flutter-based budget management app** that enables us
 ## 📸 Screenshots
 
 > Screenshots will be added soon to showcase:
-- Home screen
-- Chart screen
+- [Home screen](./screenshots/WhatsApp%20Image%202025-08-12%20at%2016.14.20_8fdbede1.jpg)
+- [Chart screen](./screenshots/WhatsApp%20Image%202025-08-12%20at%2016.14.21_6f5c56a1.jpg)
 - [Add transaction form](./screenshots/WhatsApp%20Image%202025-08-12%20at%2016.14.20_46fa41e5.jpg)
 - AI recommendations
 - Budget alerts
