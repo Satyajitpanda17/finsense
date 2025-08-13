@@ -1,5 +1,6 @@
 import 'package:finsense/views/screens/add_screen.dart';
 import 'package:finsense/views/screens/home_screen.dart';
+import 'package:finsense/views/screens/profile_screen.dart';
 import 'package:finsense/views/screens/statistics.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class BottomBar extends StatefulWidget {
 
 class _BottomBarState extends State<BottomBar> {
   int index_color = 0;
-  List Screen = [HomeScreen(), StatisticsScreen()];
+  List Screen = [HomeScreen(), StatisticsScreen(), StatisticsScreen(), ProfileScreen( userName : 'Satyajit')];
   @override
   Widget build(BuildContext context) {
    return Scaffold(

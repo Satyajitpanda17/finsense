@@ -1,5 +1,6 @@
 import 'package:finsense/common/widgets/bootom_bar.dart';
 import 'package:finsense/data/model/add_data.dart';
+import 'package:finsense/views/screens/auth/screens/singup_screen.dart';
 import 'package:finsense/views/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
     cardColor: Color(0xFF1E1E1E),
   ),
   //themeMode: ThemeMode.system,
-      home: const BottomBar()
+      home: const SignupScreen()
     );
   }
 }
